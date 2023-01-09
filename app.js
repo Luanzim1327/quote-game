@@ -1,4 +1,4 @@
-const RANDOM_QUOTE_API_ULR = "http://api.quotable.io/random";
+const RANDOM_QUOTE_API_URL = "http://api.quotable.io/random";
 const quoteDisplay = document.getElementById("quoteDisplay");
 const quoteInput = document.getElementById("quoteInput");
 const timerElement = document.getElementById("timer");
@@ -6,58 +6,61 @@ const timerElement = document.getElementById("timer");
 let correct = true
 
 quoteInput.addEventListener("input" , () => {
-   const arrayQuote =  quoteDisplay.querySelectorAll("span");
-   const arrayValue = quoteInput.value.split('');
-   
-   arrayQuote.forEach((characterSpan , index) => {
-    const character = arrayValue[index];
-    if(character === characterSpan.innerText) {
-        characterSpan.classList.add("correct");
-        characterSpan.classList.remove("incorrect");
-        correct = true
-    } else if (character === "") {
-        characterSpan.classList.remove("incorrect");
-        correct = false
-        characterSpan.classList.remove("correct");
-    } else {
-        characterSpan.classList.add("incorrect");
-        characterSpan.classList.remove("correct");
-        correct = false
-    }
-   })
+    const arrayQuote = quoteDisplay.querySelectorAll("span");
+    const arrayValue = quoteInput.value.split('');
 
-   if(correct) renderNewQuote();
+    arrayQuote.forEach((characterSpan , index) => {
+        const character = arrayValue[index];
+        if(character === characterSpan.innerText) {
+            characterSpan.classList.add("correct");
+            characterSpan.classList.remove("incorrect");
+            correct = true
+        }else if(character === "") {
+            characterSpan.classList.remove("incorrect");
+            correct = false
+            characterSpan.classList.remove("correct");
+        }else {
+            characterSpan.classList.add("incorrect");
+            characterSpan.classList.remove("correct");
+            correct = false
+
+        }
 })
 
-function getRandomQuote() {
-    return fetch(RANDOM_QUOTE_API_ULR)
+    if(correct) renderNewQuote();
+})
+
+function getRandomQuote () {
+    return fetch(RANDOM_QUOTE_API_URL)
     .then(response => response.json())
     .then(data => data.content);
 }
 
-async function renderNewQuote () {
-    const quote = await getRandomQuote();
-    quoteDisplay.innerText = "";
-    quote.split('').forEach(character => {
-        const characterSpan = document.createElement("span");
-        characterSpan.innerText = character;
-        quoteDisplay.appendChild(characterSpan);
-    })
-    quoteInput.value = null;
-    startTimer();
+async function renderNewQuote() {
+  const quote = await getRandomQuote();
+  quoteDisplay.innerText = "";
+  quote.split("").forEach(character => {
+    const characterSpan = document.createElement("span");
+    characterSpan.innerText = character;
+    quoteDisplay.appendChild(characterSpan);
+  })
+
+  quoteInput.value = null;
+  startTime();
 }
 
-let startTime
-function startTimer () {
-    timerElement.innerText = 0
-    startTime = new Date();
+let startTimer;
+
+function startTime () {
+    timerElement.innerText = "0";
+    startTimer = new Date();
     setInterval(() => {
         timerElement.innerText = getTimerTime();
     },1000)
 }
 
 function getTimerTime() {
-    return Math.floor((new Date() - startTime) / 1000)
+    return Math.floor((new Date() - startTimer) / 1000)
 }
 
 renderNewQuote();
