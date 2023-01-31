@@ -17,8 +17,8 @@ quoteInput.addEventListener("input" , () => {
             correct = true
         }else if(character === "") {
             characterSpan.classList.remove("incorrect");
-            correct = false
             characterSpan.classList.remove("correct");
+            correct = false
         }else {
             characterSpan.classList.add("incorrect");
             characterSpan.classList.remove("correct");
@@ -46,21 +46,24 @@ async function renderNewQuote() {
   })
 
   quoteInput.value = null;
+  clear();
   startTime();
 }
 
-let startTimer;
+let startTimer = 0;
+let interval;
 
 function startTime () {
-    timerElement.innerText = "0";
-    startTimer = new Date();
-    setInterval(() => {
-        timerElement.innerText = getTimerTime();
+    timerElement.innerHTML = "1";
+    startTimer = 1;
+    interval = setInterval(() => {
+        startTimer++
+        timerElement.innerHTML = startTimer;
     },1000)
 }
 
-function getTimerTime() {
-    return Math.floor((new Date() - startTimer) / 1000)
+function clInterval() {
+    clearInterval(interval);
 }
 
 renderNewQuote();
